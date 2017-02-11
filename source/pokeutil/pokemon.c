@@ -22,15 +22,17 @@ void unshuffle(u8* shuffled, u8* pkm, u32 sv){
   }
 }
 
-void decryptPokemon(const u8* ekm, u8* pkm) {
+void decryptPokemon(Opponent slot, Pokemon* poke) {
+	if(poke == 0) return;
+	const u8* ekm = OPPONENT_POINTERS[slot];
   u8 shuffled[232];
-  
+
 	u32 pkval = *(u32*)ekm;
 	u32 shval = (((pkval >> 0xD) & 0x1F) % 24);
 	u32 seed = *(u32*)ekm;
-	
+
 	memcpy(shuffled, ekm, 232);
-	
+
 	u16 a;
 	u16 b;
 	for(int i = 4; i < 116; i ++) {
@@ -39,7 +41,7 @@ void decryptPokemon(const u8* ekm, u8* pkm) {
 	  b = *((u16*)ekm + i) ^ a;
 	  *(((u16*)shuffled) + i) = b;
 	}
-	unshuffle(shuffled, pkm, shval);
+	unshuffle(shuffled, (u8*)poke, shval);
 }
 
 u8 getIV(Pokemon* poke, Stat stat) {
@@ -51,12 +53,33 @@ void asciiNick(Pokemon* poke, char* buf) {
 		u16 a = *(poke->nickname + i);
 		char b;
 		     if(a == 0x0000) b = '\0';
-		else if(a == 0x2019) b = '\''; 
+		else if(a == 0x2019) b = '\'';
 		else if(a == 0xE08E || a == 0xE08F || a > 0xFF) b = ' ';
 		else b = a & 0xFF;
-		
+
 		*(buf + i) = b;
 		if(b == '\0') return;
 	}
 	*(buf + 13) = '\0';
+}
+
+int isValid(Pokemon* poke) {
+	if(poke == 0) return 0;
+	// 1. Ensure sanity check
+	if(poke->sanity != 0) {
+		return 0;
+	}
+
+	// 2. Calculate checksum
+	u16 chksum = 0;
+	for(u8 i = 4; i < 116; i++) {
+		chksum += *((u16*)(poke) + i);
+	}
+
+	if(chksum != poke->checksum) {
+		return 0;
+	}
+
+	// 3. Ensure species is in a valid range.
+	return (poke->species >= 1 && poke->species <= 802);
 }

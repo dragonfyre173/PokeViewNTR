@@ -4,7 +4,8 @@
 
 // https://github.com/drgoku282/PKMN-NTR
 
-#define NUM_OPPONENTS 4
+#define NUM_OPPONENTS 7
+
 typedef enum Stat {
 	HP=0, ATK, DEF, SPE, SPA, SPD
 } Stat;
@@ -12,11 +13,15 @@ typedef enum Stat {
 typedef enum Opponent {
 	PRIMARY = 0,
 	SECONDARY,
-	SOS1, SOS2
+	SOS0, SOS1, SOS2, SOS3, SOS4
 } Opponent;
 
 static const u8* OPPONENT_POINTERS[NUM_OPPONENTS] = {
-	(u8*)0x3254F4AC, (u8*)0x32550284, (u8*)0x3003969C, (u8*)0x3002FD64
+	(u8*)0x3254F4AC, (u8*)0x32550284, (u8*)0x3003969C, (u8*)0x3002FD64, (u8*)0x3002FF48, (u8*)0x3003012C, (u8*)0x30030310
+};
+
+static const char *OPPONENT_NAMES[NUM_OPPONENTS] = {
+	"1st", "2nd", "SOS0", "SOS1", "SOS2", "SOS3", "SOS4"
 };
 
 static const char *STAT_NAME[] = {
@@ -60,7 +65,9 @@ typedef struct Pokemon {
 	u8	otData[56];			// 0xB0 - OT data block
 } Pokemon;
 
-void decryptPokemon(const u8 *ekm, u8* pkm);
+void decryptPokemon(Opponent slot, Pokemon* poke);
 u8 getIV(Pokemon* poke, Stat stat);
 void asciiNick(Pokemon* poke, char* buf);
+
+int isValid(Pokemon* poke);
 #endif
