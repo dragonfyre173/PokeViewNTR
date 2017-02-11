@@ -24,14 +24,14 @@ Opponent selectedOpponent = PRIMARY;
 u8 buttonAck = 0;
 
 u32* battleOff = (u32*)0x6747D8;
-u32 inBattle = 0x40400000;
+u32 inBattle = 0x40400000; // Base value for the in-battle flag
+u32 battleRange = 0x10000; // Range at which the battle flag appears
 
 u32 isInBattle() {
-	for(int i = 0; i < 0x10000; i++) {
-		if(*battleOff == inBattle + i) {
-			return 1;
-		}
+	if(*battleOff >= inBattle && *battleOff <= (inBattle + battleRange)) {
+		return 1;
 	}
+	enabled = 1;
 	return 0;
 }
 
@@ -123,10 +123,9 @@ return 0 on success. return 1 when nothing in framebuffer was modified.
 */
 
 u32 overlayCallback(u32 isBottom, u32 addr, u32 addrB, u32 stride, u32 format) {
-	handleKey();
-	if(enabled && isBottom == 0) {
-		u8 battle = isInBattle();
-		if(battle) {
+	if(isInBattle()) {
+		handleKey();
+		if(enabled && isBottom == 0) {
 			drawPokemonID(isBottom, addr, stride, format, 14);
 			if ((isBottom == 0) && (addrB) && (addrB != addr))  {
 				drawPokemonID(isBottom, addrB, stride, format, 10);

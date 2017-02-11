@@ -1,4 +1,5 @@
 #include "pokemon.h"
+#include "rng.h"
 #include <string.h>
 #include <stdlib.h>
 u8 blockPosition[4][24] = {
@@ -7,10 +8,6 @@ u8 blockPosition[4][24] = {
 	{2, 3, 1, 1, 3, 2, 2, 3, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 3, 2, 3, 2, 1, 1},
 	{3, 2, 3, 2, 1, 1, 3, 2, 3, 2, 1, 1, 3, 2, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0}
 };
-
-u32 lcrng(u32 seed){
-	return (seed * 0x41C64E6D + 0x00006073);
-}
 
 
 void unshuffle(u8* shuffled, u8* pkm, u32 sv){
