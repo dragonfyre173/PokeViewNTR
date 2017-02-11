@@ -10,6 +10,7 @@ Handle fsUserHandle = 0;
 #define CALLBACK_OVERLAY (101)
 
 #define TICKS_PER_MSEC (268123.480)
+#define BLANK 255,255,255
 
 const int POKE_SIZE = 232;
 
@@ -35,56 +36,73 @@ u32 isInBattle() {
 	return 0;
 }
 
-void drawPokemonID(int isBottom, u32 addr, u32 stride, u32 format, u32 colOffset) {
+void drawPokemonID() 
+{
 
 	u8 pkbytes[232];
 	Pokemon* pkm = (Pokemon*)pkbytes;
 
-	if(pkm != 0) {
+	if(pkm != 0)
+	{
 		decryptPokemon(selectedOpponent, pkm);
 
-		u32 height = 400;
 		char buf[100];
 		char nick[13];
+		int posX = 14;
+		int posY = 11;
 		// Bounding box
-		ovDrawTranspartBlackRect(addr, stride, format, 9, colOffset, 77 + 4, 170 + 4, 1);
+		OvDrawTranspartBlackRect(posX, 9, 125, 87, 1);
 
 		// See if the pokemon's actually valid first
-		if(isValid(pkm)) {
-				// This value will be updated when the battle is over
-				// Now we're good to display it
-				// Pokemon name
-				asciiNick(pkm, nick);
-				xsprintf(buf, "[%d] %s", selectedOpponent + 1, nick);
-				ovDrawString(addr, stride, format, height, 11, colOffset + 4, 255, 255, 255, buf);
-			  if(pkm->nature < NATURE_COUNT) {
-					xsprintf(buf, "%s", NATURE_LOOKUP[pkm->nature]);
-					ovDrawString(addr, stride, format, height, 22, colOffset + 14, 255, 255, 255, buf);
-				}
-				// Ability
-				if(pkm->ability < ABILITY_COUNT) {
-					xsprintf(buf, "%s", ABILITY_LOOKUP[pkm->ability]);
-					ovDrawString(addr, stride, format, height, 33, colOffset + 14, 255, 255, 255, buf);
-				}
+		if(isValid(pkm)) 
+		{
+			// This value will be updated when the battle is over
+			// Now we're good to display it
+			// Pokemon name
+			asciiNick(pkm, nick);
+			xsprintf(buf, "[%d] %s", selectedOpponent + 1, nick);
+			posY = OvDrawString(buf, posX, posY, BLANK); 
 
-				// Held item
-				if(pkm->heldItem < ITEM_COUNT) {
-					xsprintf(buf, "%s", ITEM_LOOKUP[pkm->heldItem]);
-					ovDrawString(addr, stride, format, height, 44, colOffset + 14, 255, 255, 255, buf);
-				}
+			posX += 10;
 
-				// IVs
-				for(u8 i = 0; i < 6; i++) {
-					u8 iv = getIV(pkm, i);
-					xsprintf(buf, "%3s: %2d", STAT_NAME[i], iv);
-					u8 r = iv > 29 ? 0 : 255;
-					u8 g = iv < 2 ? 0 : 255;
-					u8 b = (iv > 29 || iv < 2) ? 0 : 255;
-					ovDrawString(addr, stride, format, height,  11 * ((i % 3) + 5), colOffset + 24 + (80 * (i / 3)), r, g, b, buf);
-				}
-		} else {
+			//Nature
+		  	if(pkm->nature < NATURE_COUNT)
+		  	{
+				xsprintf(buf, "%s", NATURE_LOOKUP[pkm->nature]);
+				posY = OvDrawString(buf, posX, posY, BLANK);
+			}
+
+			
+			// Ability
+			if(pkm->ability < ABILITY_COUNT)
+			{
+				xsprintf(buf, "%s", ABILITY_LOOKUP[pkm->ability]);
+				posY = OvDrawString(buf, posX, posY, BLANK);
+			}
+
+			// Held item
+			if(pkm->heldItem < ITEM_COUNT)
+			{
+				xsprintf(buf, "%s", ITEM_LOOKUP[pkm->heldItem]);
+				posY = OvDrawString(buf, posX, posY, BLANK);
+			}
+
+			posX += 6;
+			// IVs
+			for(u8 i = 0; i < 6; i++)
+			{
+				u8 iv = getIV(pkm, i);
+				xsprintf(buf, "%3s: %2d", STAT_NAME[i], iv);
+				u8 r = iv > 29 ? 0 : 255;
+				u8 g = iv < 2 ? 0 : 255;
+				u8 b = (iv > 29 || iv < 2) ? 0 : 255;
+				OvDrawString(buf, posX + (60 * (i / 3)),  posY + (12 * (i % 3)), r, g, b);
+			}
+		} 
+		else 
+		{
 			xsprintf(buf, "[%d] Invalid Pokemon", selectedOpponent + 1);
-			ovDrawString(addr, stride, format, height, 11, colOffset + 4, 255, 255, 255, buf);
+			OvDrawString(buf, posX, posY, BLANK);
 		}
 	}
 }
@@ -122,15 +140,18 @@ format: framebuffer format, see https://www.3dbrew.org/wiki/GPU/External_Registe
 return 0 on success. return 1 when nothing in framebuffer was modified.
 */
 
-u32 overlayCallback(u32 isBottom, u32 addr, u32 addrB, u32 stride, u32 format) {
+u32 overlayCallback(u32 isBottom, u32 addr, u32 addrB, u32 stride, u32 format)
+{
+	// Set draw settings
+	OvSettings(addr, addrB, stride, format, !isBottom);
+
 	handleKey();
-	if(enabled && isBottom == 0) {
+	if(enabled && isBottom == 0) 
+	{
 		u8 battle = isInBattle();
-		if(battle) {
-			drawPokemonID(isBottom, addr, stride, format, 14);
-			if ((isBottom == 0) && (addrB) && (addrB != addr))  {
-				drawPokemonID(isBottom, addrB, stride, format, 10);
-			}
+		if(battle) 
+		{
+			drawPokemonID();
 			return 0;
 		}
 	}
