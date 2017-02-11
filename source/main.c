@@ -83,7 +83,7 @@ void drawPokemonID(int isBottom, u32 addr, u32 stride, u32 format, u32 colOffset
 					ovDrawString(addr, stride, format, height,  11 * ((i % 3) + 5), colOffset + 24 + (80 * (i / 3)), r, g, b, buf);
 				}
 		} else {
-			xsprintf(buf, "[%d] Invalid Pokemon", selectedOpponent);
+			xsprintf(buf, "[%d] Invalid Pokemon", selectedOpponent + 1);
 			ovDrawString(addr, stride, format, height, 11, colOffset + 4, 255, 255, 255, buf);
 		}
 	}
