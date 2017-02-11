@@ -55,7 +55,7 @@ void drawPokemonID(int isBottom, u32 addr, u32 stride, u32 format, u32 colOffset
 				// Now we're good to display it
 				// Pokemon name
 				asciiNick(pkm, nick);
-				xsprintf(buf, "#%d: %s", selectedOpponent + 1, nick);
+				xsprintf(buf, "[%d] %s", selectedOpponent + 1, nick);
 				ovDrawString(addr, stride, format, height, 11, colOffset + 4, 255, 255, 255, buf);
 			  if(pkm->nature < NATURE_COUNT) {
 					xsprintf(buf, "%s", NATURE_LOOKUP[pkm->nature]);
@@ -83,7 +83,7 @@ void drawPokemonID(int isBottom, u32 addr, u32 stride, u32 format, u32 colOffset
 					ovDrawString(addr, stride, format, height,  11 * ((i % 3) + 5), colOffset + 24 + (80 * (i / 3)), r, g, b, buf);
 				}
 		} else {
-			xsprintf(buf, "Invalid Pokemon");
+			xsprintf(buf, "[%d] Invalid Pokemon", selectedOpponent);
 			ovDrawString(addr, stride, format, height, 11, colOffset + 4, 255, 255, 255, buf);
 		}
 	}
