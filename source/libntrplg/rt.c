@@ -7,6 +7,8 @@
 #include <fcntl.h>
 #include <errno.h>
 
+u32 getCurrentProcessHandle(void);
+
 void rtInitLock(RT_LOCK *lock) {
 	lock->value = 0;
 }
