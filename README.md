@@ -28,4 +28,4 @@ Despite Sun and Moon only having double battles, there are four valid targets.
 * 2: Secondary target in a normal double battle
 * 3-7: Reserved for SOS battles. They seem to archive the order ally pokemon arrive in, but I'm not 100% sure how they work.
 
-[PokeViewNTR in Action](screenshots/1.png)
+![PokeViewNTR in Action](screenshots/1.png "PokeViewNTR in Action")
