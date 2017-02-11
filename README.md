@@ -33,3 +33,4 @@ Despite Sun and Moon only having double battles, there are four valid targets.
 ### Credits
 * drgoku282's [PKMN-NTR](https://github.com/drgoku282/PKMN-NTR) for memory offsets, pokemon decryption, and battle detection
 * Hartmannaf's [PokemonCheatPlugin](https://github.com/hartmannaf/PokemonCheatPlugin) for input listening
+* 44760's [NTR Overlay Samples](https://github.com/44670/ntr_overlay_samples) for a skeleton of this plugin
