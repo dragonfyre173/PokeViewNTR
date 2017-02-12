@@ -47,7 +47,7 @@ void drawPokemonID(int isBottom, u32 addr, u32 stride, u32 format, u32 colOffset
 		char buf[100];
 		char nick[13];
 		// Bounding box
-		ovDrawTranspartBlackRect(addr, stride, format, 9, colOffset, 77 + 4, 170 + 4, 1);
+		ovDrawTranspartBlackRect(addr, stride, format, 9, colOffset, 88 + 4, 170 + 4, 1);
 
 		// See if the pokemon's actually valid first
 		if(isValid(pkm)) {
@@ -59,18 +59,18 @@ void drawPokemonID(int isBottom, u32 addr, u32 stride, u32 format, u32 colOffset
 				ovDrawString(addr, stride, format, height, 11, colOffset + 4, 255, 255, 255, buf);
 			  if(pkm->nature < NATURE_COUNT) {
 					xsprintf(buf, "%s", NATURE_LOOKUP[pkm->nature]);
-					ovDrawString(addr, stride, format, height, 22, colOffset + 14, 255, 255, 255, buf);
+					ovDrawString(addr, stride, format, height, 22, colOffset + 8 + 4, 255, 255, 255, buf);
 				}
 				// Ability
 				if(pkm->ability < ABILITY_COUNT) {
 					xsprintf(buf, "%s", ABILITY_LOOKUP[pkm->ability]);
-					ovDrawString(addr, stride, format, height, 33, colOffset + 14, 255, 255, 255, buf);
+					ovDrawString(addr, stride, format, height, 33, colOffset + 8 + 4, 255, 255, 255, buf);
 				}
 
 				// Held item
 				if(pkm->heldItem < ITEM_COUNT) {
 					xsprintf(buf, "%s", ITEM_LOOKUP[pkm->heldItem]);
-					ovDrawString(addr, stride, format, height, 44, colOffset + 14, 255, 255, 255, buf);
+					ovDrawString(addr, stride, format, height, 44, colOffset + 8 + 4, 255, 255, 255, buf);
 				}
 
 				// IVs
@@ -80,8 +80,22 @@ void drawPokemonID(int isBottom, u32 addr, u32 stride, u32 format, u32 colOffset
 					u8 r = iv > 29 ? 0 : 255;
 					u8 g = iv < 2 ? 0 : 255;
 					u8 b = (iv > 29 || iv < 2) ? 0 : 255;
-					ovDrawString(addr, stride, format, height,  11 * ((i % 3) + 5), colOffset + 24 + (80 * (i / 3)), r, g, b, buf);
+					ovDrawString(addr, stride, format, height,  11 * ((i % 3) + 5), colOffset + 12 + (80 * (i / 3)), r, g, b, buf);
 				}
+
+				// Hidden Power
+				xsprintf(buf, "Hidden Power");
+				ovDrawString(addr, stride, format, height, 88, colOffset + 4, 255, 255, 255, buf);
+
+				u32 hpow = getHiddenPower(pkm);
+				u32 color = 0xFFFFFF;
+				if(hpow >= 0 && hpow <= 15) {
+					xsprintf(buf, "%s", TYPE_NAME[hpow]);
+					color = TYPE_COLOR[hpow];
+				} else {
+					xsprintf(buf, "Error");
+				}
+				ovDrawString(addr, stride, format, height, 88, colOffset + 108, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, buf);
 		} else {
 			xsprintf(buf, "[%d] Invalid Pokemon", selectedOpponent + 1);
 			ovDrawString(addr, stride, format, height, 11, colOffset + 4, 255, 255, 255, buf);

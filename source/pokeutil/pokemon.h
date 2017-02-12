@@ -16,15 +16,19 @@ typedef enum Opponent {
 	SOS0, SOS1, SOS2, SOS3, SOS4
 } Opponent;
 
+static const char* TYPE_NAME[] = {
+	"Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon"
+};
+
+static const u32 TYPE_COLOR[] = {
+	0xC03028,0xA890F0,0xA040A0,0xE0C068,0xB8A038,0xA8B820,0x705898,0xB8B8D0,0xF08030,0x6890F0,0x78C850,0xF8D030,0xF85888,0x98D8D8,0x7038F8,0x705848
+};
+
 static const u8* OPPONENT_POINTERS[NUM_OPPONENTS] = {
 	(u8*)0x3254F4AC, (u8*)0x32550284, (u8*)0x3003969C, (u8*)0x3002FD64, (u8*)0x3002FF48, (u8*)0x3003012C, (u8*)0x30030310
 };
 
-static const char *OPPONENT_NAMES[NUM_OPPONENTS] = {
-	"1st", "2nd", "SOS0", "SOS1", "SOS2", "SOS3", "SOS4"
-};
-
-static const char *STAT_NAME[] = {
+static const char* STAT_NAME[] = {
 	"HP", "ATK", "DEF", "SPE", "SPA", "SPD"
 };
 
@@ -68,6 +72,7 @@ typedef struct Pokemon {
 void decryptPokemon(Opponent slot, Pokemon* poke);
 u8 getIV(Pokemon* poke, Stat stat);
 void asciiNick(Pokemon* poke, char* buf);
+u32 getHiddenPower(Pokemon* poke);
 
 int isValid(Pokemon* poke);
 #endif

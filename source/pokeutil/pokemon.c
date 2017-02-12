@@ -80,3 +80,12 @@ int isValid(Pokemon* poke) {
 	// 3. Ensure species is in a valid range.
 	return (poke->species >= 1 && poke->species <= 802);
 }
+
+u32 getHiddenPower(Pokemon* poke) {
+	u32 type = 0;
+	for(Stat i = HP; i <= SPD; i++) {
+		type |= ((getIV(poke, i) % 2) << i);
+	}
+	type = (type * 15) / 63;
+	return type;
+}
