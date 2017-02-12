@@ -17,7 +17,7 @@ typedef enum Opponent {
 } Opponent;
 
 static const char* TYPE_NAME[] = {
-	"Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon"
+	"Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark"
 };
 
 static const u32 TYPE_COLOR[] = {
